@@ -18,14 +18,26 @@ Route::get('/', function () {
 });
 Route::get('/jobs', function () {
     $jobs = Job::with('employer')->simplePaginate(5);
-    return view('jobs', [
+    return view('jobs.index', [
         'jobs' => $jobs,
     ]);
+});
+Route::get('jobs/create', function () {
+    return view('jobs.create');
 });
 Route::get('/jobs/{id}', function ($id) {
     $job = Job::find($id);
 
-    return view('job', ['job' => $job]);
+    return view('jobs.show', ['job' => $job]);
+});
+Route::post('/jobs', function () {
+    $job = new Job();
+    $job->title = request('title');
+    $job->salary = request('salary');
+    $job->employer_id = 1;
+    $job->save();
+
+    return redirect('/jobs');
 });
 Route::get('/contact', function () {
     return view('contact');
