@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Job;
+use App\Http\Controllers\JobController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,58 +18,18 @@ Route::get('/', function () {
     return view('home');
 });
 //displays all jobs
-Route::get('/jobs', function () {
-    $jobs = Job::with('employer')->latest()->simplePaginate(5);
-    return view('jobs.index', [
-        'jobs' => $jobs,
-    ]);
-});
+Route::get('/jobs', [JobController::class, 'index']);
 //create
-Route::get('jobs/create', function () {
-    return view('jobs.create');
-});
+Route::get('jobs/create', [JobController::class, 'create']);
 //show
-Route::get('/jobs/{job}', function (Job $job) {
-
-    return view('jobs.show', ['job' => $job]);
-});
+Route::get('/jobs/{job}', [JobController::class, 'show']);
 //store
-Route::post('/jobs', function () {
-    request()->validate([
-        'title' => ['required', 'min:3'],
-        'salary' => ['required']
-    ]);
-    $job = new Job();
-    $job->title = request('title');
-    $job->salary = request('salary');
-    $job->employer_id = 1;
-    $job->save();
-
-    return redirect('/jobs');
-});
-Route::get('/jobs/{job}/edit', function (Job $job) {
-
-    return view('jobs.edit', ['job' => $job]);
-});
+Route::post('/jobs', [JobController::class, 'store']);
+Route::get('/jobs/{job}/edit', [JobController::class, 'edit']);
 //update
-Route::patch('/jobs/{job}', function (Job $job) {
-    request()->validate([
-        'title' => ['required', 'min:3'],
-        'salary' => ['required']
-    ]);
-
-    $job->update([
-        'title' => request('title'),
-        'salary' => request('salary')
-    ]);
-    return redirect('/jobs/' . $job->id);
-});
+Route::patch('/jobs/{job}', [JobController::class, 'update']);
 //destroy
-Route::delete('/jobs/{job}', function (Job $job) {
-
-    $job->delete();
-    return redirect('/jobs');
-});
+Route::delete('/jobs/{job}', [JobController::class, 'destroy']);
 Route::get('/contact', function () {
     return view('contact');
 });
