@@ -62,7 +62,7 @@
                 </div>
             </div>
         </form>
-        <form method="POST" action="/jobs/{{$job->id}}" id="delete-form " class="hidden">
+        <form method="POST" action="/jobs/{{$job->id}}" id="delete-form" class="hidden">
             @csrf
             @method('DELETE')
 
